@@ -8,27 +8,31 @@
   let file;
   let filtered = "";
   let json;
-  let sortedByLevels;
-  let sortedByPeople;
+  let sortedByLevels = {};
+  let sortedByPeople = {};
 
-  let currentlyViewing = "levels";
+  let currentlyViewing = "people";
 
   async function handleFile(e) {
+    // Reset everything first
+    file = null;
+    filtered = "";
+    json = null;
+    sortedByLevels = {};
+    sortedByPeople = {};
+    currentlyViewing = "levels";
+
+    // Get the new file
     file = e.target.files[0];
     if (!file) return;
 
     const text = await file.text();
+
     filtered = filterCsv(text);
-    //console.log(filtered);
-
     json = csvToJson(filtered);
-    //console.log(json);
 
-    sortedByLevels = sortIntoLevels(json);
-    //console.log(sortedByLevels);
-
-    sortedByPeople = sortIntoPeople(json);
-    //console.log(sortedByPeople);
+    sortedByLevels = { ...sortIntoLevels(json) };
+    sortedByPeople = { ...sortIntoPeople(json) };
   }
 
   function toggleView() {
@@ -43,8 +47,8 @@
     on:change={handleFile}
     class="p-2 border rounded"
   />
-  <br />
-  <br />
+  <br /><br />
+
   {#if filtered}
     <button
       on:click={toggleView}
@@ -52,6 +56,7 @@
     >
       View {currentlyViewing === "people" ? "Levels" : "People"}
     </button>
+
     {#if currentlyViewing === "levels"}
       <LevelDisplay {sortedByLevels} />
     {:else}
