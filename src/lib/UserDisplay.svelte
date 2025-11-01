@@ -171,7 +171,7 @@
 
     <!-- Individual Stats Panel -->
     <div class="card">
-        <h3>Individual Stats</h3>
+        <h3>Individual Stats - {selectedUserObj.user}</h3>
         {#each Object.entries(selectedUserObj.stats) as [statName, value]}
             <div class="rating-row">
                 <span class="level-name">{formatKey(statName)}</span>
