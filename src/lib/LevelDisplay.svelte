@@ -124,11 +124,13 @@
             allUserStats[0],
         ),
         highestMode: allUserStats.reduce(
-            (prev, curr) => (curr.stats.mode > prev.stats.mode ? curr : prev),
+            (prev, curr) =>
+                curr.stats.modeCount > prev.stats.modeCount ? curr : prev,
             allUserStats[0],
         ),
         lowestMode: allUserStats.reduce(
-            (prev, curr) => (curr.stats.mode < prev.stats.mode ? curr : prev),
+            (prev, curr) =>
+                curr.stats.modeCount < prev.stats.modeCount ? curr : prev,
             allUserStats[0],
         ),
         highestStd: allUserStats.reduce(
