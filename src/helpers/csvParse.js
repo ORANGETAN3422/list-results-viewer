@@ -46,7 +46,7 @@ export function csvToJson(csvText) {
         headers.forEach((header, i) => {
             const h = header.toLowerCase();
             const v = (values[i] ?? "").toLowerCase();
-            if (h.startsWith("rate ")) obj[h.substring(5).trim().split(' ').join('_')] = v ?? null;
+            if (h.startsWith("rate ")) obj[h.substring(5).trim().split(' ').join('_')] = parseInt(v, 10) ?? null;
             else if (h === "who are you?") obj["who"] = v ?? null;
         });
         return obj;
