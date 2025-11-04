@@ -15,7 +15,6 @@
   let currentlyViewing = "people";
 
   async function handleFile(e) {
-    // Reset everything first
     file = null;
     filtered = "";
     json = null;
@@ -23,7 +22,6 @@
     sortedByPeople = {};
     currentlyViewing = "levels";
 
-    // Get the new file
     file = e.target.files[0];
     if (!file) return;
 
@@ -59,9 +57,9 @@
     </button>
 
     {#if currentlyViewing === "levels"}
-      <Display data={sortedByLevels} />
+      <Display data={sortedByLevels} {currentlyViewing} />
     {:else}
-      <Display data={sortedByPeople} />
+      <Display data={sortedByPeople} {currentlyViewing} />
     {/if}
   {/if}
 </div>
