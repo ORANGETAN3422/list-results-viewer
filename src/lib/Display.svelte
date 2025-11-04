@@ -5,10 +5,10 @@
         calculateStats,
     } from "../helpers/dataAnalyse";
 
-    export let data;
+    import LeaderboardCard from "./Cards/LeaderboardCard.svelte";
+    import StatsCard from "./Cards/StatsCard.svelte";
 
-    export let min = 1;
-    export let max = 10;
+    export let data;
 
     let items = Object.keys(data);
     let selectedIndex = 0;
@@ -112,7 +112,7 @@
             {/each}
         </select>
 
-        <h3>{selectedItem.name}</h3>
+        <h3>{formatKey(selectedItem.name)}</h3>
 
         <!-- Sort Button -->
         <button on:click={toggleSortOrder} class="sort-btn">
@@ -140,82 +140,9 @@
         {/if}
     </div>
 
-    <!-- Individual Stats Panel -->
-    <div class="card">
-        <h3>Individual Stats - {selectedItem.name}</h3>
-        {#each Object.entries(selectedItem.stats) as [statName, value]}
-            <div class="rating-row">
-                <span class="level-name">{formatKey(statName)}</span>
-                <span class="level-value-green">
-                    {statName === "mode"
-                        ? `${value} (x${selectedItem.stats.modeCount})`
-                        : value}
-                </span>
-            </div>
-        {/each}
-    </div>
-
-    <!-- Leaderboard Panel -->
-    <div class="card">
-        <h3>Leaderboard</h3>
-        <div class="rating-row">
-            <span class="level-name">Highest Mean 🢁</span>
-            <span class="level-value-green"
-                >{leaderboard.highestMean.name} ({leaderboard.highestMean.stats
-                    .average})</span
-            >
-        </div>
-        <div class="rating-row">
-            <span class="level-name">Lowest Mean 🢃</span>
-            <span class="level-value-red"
-                >{leaderboard.lowestMean.name} ({leaderboard.lowestMean.stats
-                    .average})</span
-            >
-        </div>
-        <hr />
-        <div class="rating-row">
-            <span class="level-name">Highest Median 🢁</span>
-            <span class="level-value-green"
-                >{leaderboard.highestMedian.name} ({leaderboard.highestMedian
-                    .stats.median})</span
-            >
-        </div>
-        <div class="rating-row">
-            <span class="level-name">Lowest Median 🢃</span>
-            <span class="level-value-red"
-                >{leaderboard.lowestMedian.name} ({leaderboard.lowestMedian
-                    .stats.median})</span
-            >
-        </div>
-        <hr />
-        <div class="rating-row">
-            <span class="level-name">Highest Mode 🢁</span>
-            <span class="level-value-green"
-                >{leaderboard.highestMode.name} ({leaderboard.highestMode.stats
-                    .mode} x{leaderboard.highestMode.stats.modeCount})</span
-            >
-        </div>
-        <div class="rating-row">
-            <span class="level-name">Lowest Mode 🢃</span>
-            <span class="level-value-red"
-                >{leaderboard.lowestMode.name} ({leaderboard.lowestMode.stats
-                    .mode} x{leaderboard.lowestMode.stats.modeCount})</span
-            >
-        </div>
-        <hr />
-        <div class="rating-row">
-            <span class="level-name">Highest Std Dev 🢁</span>
-            <span class="level-value-green"
-                >{leaderboard.highestStd.name} ({leaderboard.highestStd.stats
-                    .stdDev})</span
-            >
-        </div>
-        <div class="rating-row">
-            <span class="level-name">Lowest Std Dev 🢃</span>
-            <span class="level-value-red"
-                >{leaderboard.lowestStd.name} ({leaderboard.lowestStd.stats
-                    .stdDev})</span
-            >
-        </div>
-    </div>
+    <StatsCard
+        title={"Individual Stats - " + formatKey(selectedItem.name)}
+        stats={selectedItem.stats}
+    />
+    <LeaderboardCard {leaderboard} />
 </section>

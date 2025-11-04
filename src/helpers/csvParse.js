@@ -1,37 +1,67 @@
 export function filterCsv(csvText) {
-    const rows = csvText.trim().split(/\r?\n/).map(line =>
-        line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)?.map(v => v.replace(/^"|"$/g, '')) || []
-    );
+    const rows = [];
+    let currentRow = [];
+    let currentCell = '';
+    let inQuotes = false;
 
-    const headers = rows[0];
-    const timestampIndex = headers.findIndex(h => h.trim().toLowerCase() === "timestamp");
+    for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i];
+        const nextChar = csvText[i + 1];
 
-    if (timestampIndex === -1) {
-        console.error("No 'Timestamp' column found.");
-        return "";
+        if (char === '"') {
+            if (inQuotes && nextChar === '"') {
+                currentCell += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            currentRow.push(currentCell);
+            currentCell = '';
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+            if (char === '\r' && nextChar === '\n') continue;
+            currentRow.push(currentCell);
+            if (currentRow.some(cell => cell.trim() !== '')) rows.push(currentRow);
+            currentRow = [];
+            currentCell = '';
+        } else {
+            currentCell += char;
+        }
     }
 
-    const keepIndexes = headers
-        .map((h, i) => {
-            const name = h.trim().toLowerCase();
-            if (name.startsWith("rate ") || name === "who are you?") return i;
-            return -1;
-        })
-        .filter(i => i !== -1);
+    if (currentCell || currentRow.length) currentRow.push(currentCell);
+    if (currentRow.length && currentRow.some(cell => cell.trim() !== '')) rows.push(currentRow);
 
-    const filteredHeaders = ["Timestamp", ...keepIndexes.map(i => headers[i])];
-    const timestampRegex = /^\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}:\d{2}$/;
+    const headers = rows[0].map(h => h.trim().replace(/^"|"$/g, ''));
+    const timestampIndex = headers.findIndex(h => h.toLowerCase() === 'timestamp');
+    const whoAreYouIndex = headers.findIndex(h => h.toLowerCase() === 'who are you?');
 
-    const filteredRows = rows
-        .slice(1)
-        .filter(cols => timestampRegex.test(cols[timestampIndex]?.trim()))
-        .map(cols => {
-            const timestamp = cols[timestampIndex];
-            const kept = keepIndexes.map(i => cols[i]);
-            return [timestamp, ...kept].join(",");
-        });
+    if (timestampIndex === -1 || whoAreYouIndex === -1) {
+        console.error("❌ Required columns 'Timestamp' or 'Who are you?' not found.");
+        return '';
+    }
 
-    return [filteredHeaders.join(","), ...filteredRows].join("\n");
+    const keepIndexes = [];
+    for (let i = timestampIndex; i <= whoAreYouIndex; i++) keepIndexes.push(i);
+    const filteredHeaders = keepIndexes.map(i => headers[i]);
+
+    const filteredRows = [];
+    for (const row of rows.slice(1)) {
+        let ts = row[timestampIndex]?.trim().replace(/^"|"$/g, '');
+        if (ts) {
+            const parts = ts.split(' ');
+            const dateParts = parts[0].split('/');
+            if (dateParts.length === 3) {
+                ts = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]} ${parts[1]}`;
+            }
+            const cleanedRow = [...row];
+            cleanedRow[timestampIndex] = ts;
+            const finalRow = keepIndexes.map(i => (cleanedRow[i] ?? '').trim().replace(/^"|"$/g, ''));
+            filteredRows.push(finalRow.join(','));
+        }
+    }
+
+    return [filteredHeaders.join(','), ...filteredRows].join('\n');
 }
 
 export function csvToJson(csvText) {

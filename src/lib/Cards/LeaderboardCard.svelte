@@ -20,11 +20,13 @@
         <div class="rating-row">
             <span class="level-name">{label}</span>
             <span class={positive ? "level-value-green" : "level-value-red"}>
-                {entry.user} ({entry.stats[key]}
-                {key === "mode" ? ` x${entry.stats.modeCount}` : ""})
+                {entry.user}
+                {entry.stats[key]}{key === "mode"
+                    ? ` x${entry.stats.modeCount}`
+                    : ""}
             </span>
         </div>
-        {#if label.includes("Median 🢃") || label.includes("Mode 🢃")}
+        {#if label.includes("Median 🢃") || label.includes("Mode 🢃") || label.includes("Mean 🢃")}
             <hr />
         {/if}
     {/each}
