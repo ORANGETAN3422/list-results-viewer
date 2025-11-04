@@ -2,8 +2,9 @@
   import { filterCsv, csvToJson } from "./helpers/csvParse";
   import { sortIntoLevels, sortIntoPeople } from "./helpers/sortResults";
 
-  import LevelDisplay from "./lib/LevelDisplay.svelte";
-  import UserDisplay from "./lib/UserDisplay.svelte";
+  //import LevelDisplay from "./lib/LevelDisplay.svelte";
+  //import UserDisplay from "./lib/Display.svelte";
+  import Display from "./lib/Display.svelte";
 
   let file;
   let filtered = "";
@@ -58,9 +59,9 @@
     </button>
 
     {#if currentlyViewing === "levels"}
-      <LevelDisplay {sortedByLevels} />
+      <Display data={sortedByLevels} />
     {:else}
-      <UserDisplay {sortedByPeople} />
+      <Display data={sortedByPeople} />
     {/if}
   {/if}
 </div>

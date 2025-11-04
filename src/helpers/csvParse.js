@@ -1,13 +1,13 @@
 export function filterCsv(csvText) {
-    const rows = csvText.trim().split(/\r?\n/);
-    const headers = rows[0].split(",");
-
-    const timestampIndex = headers.findIndex(h =>
-        h.trim().toLowerCase() === "timestamp"
+    const rows = csvText.trim().split(/\r?\n/).map(line =>
+        line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)?.map(v => v.replace(/^"|"$/g, '')) || []
     );
 
+    const headers = rows[0];
+    const timestampIndex = headers.findIndex(h => h.trim().toLowerCase() === "timestamp");
+
     if (timestampIndex === -1) {
-        console.error("❌ No 'Timestamp' column found.");
+        console.error("No 'Timestamp' column found.");
         return "";
     }
 
@@ -20,11 +20,10 @@ export function filterCsv(csvText) {
         .filter(i => i !== -1);
 
     const filteredHeaders = ["Timestamp", ...keepIndexes.map(i => headers[i])];
-    const timestampRegex = /^\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}:\d{2}/; // nasty timestap detection regex
+    const timestampRegex = /^\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}:\d{2}$/;
 
     const filteredRows = rows
         .slice(1)
-        .map(row => row.split(","))
         .filter(cols => timestampRegex.test(cols[timestampIndex]?.trim()))
         .map(cols => {
             const timestamp = cols[timestampIndex];

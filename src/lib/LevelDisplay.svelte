@@ -7,6 +7,14 @@
     export let min = 1;
     export let max = 10;
 
+    let sortOrder = "desc";
+
+    function toggleSortOrder() {
+        if (sortOrder === "desc") sortOrder = "asc";
+        else if (sortOrder === "asc") sortOrder = "none";
+        else sortOrder = "desc";
+    }
+
     function getColor(value) {
         let ratio = (value - min) / (max - min);
         ratio = Math.min(Math.max(ratio, 0), 1);
@@ -102,6 +110,14 @@
         stats: {},
     };
 
+    $: originalRatings = Object.entries(selectedUserObj.ratings);
+    $: sortedRatings =
+        sortOrder === "none"
+            ? originalRatings
+            : [...originalRatings].sort((a, b) =>
+                  sortOrder === "desc" ? b[1] - a[1] : a[1] - b[1],
+              );
+
     $: leaderboard = {
         highestMean: allUserStats.reduce(
             (prev, curr) =>
@@ -158,7 +174,19 @@
         <h3>{selectedUserObj.user}</h3>
 
         {#if Object.keys(selectedUserObj.ratings).length > 0}
-            {#each Object.entries(selectedUserObj.ratings) as [levelName, value]}
+            <!-- Sort Button -->
+            <button on:click={toggleSortOrder} class="sort-btn">
+                Sort:
+                {#if sortOrder === "desc"}
+                    Highest {">"} Lowest
+                {:else if sortOrder === "asc"}
+                    Lowest {">"} Highest
+                {:else}
+                    Default
+                {/if}
+            </button>
+
+            {#each sortedRatings as [levelName, value]}
                 <div class="rating-row">
                     <span class="level-name">{formatKey(levelName)}</span>
                     <span class="level-value" style="color: {getColor(value)}"
@@ -305,5 +333,21 @@
         padding: 0.3rem;
         border-radius: 6px;
         border: 1px solid #ccc;
+    }
+
+    .sort-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        width: 100%;
+        font-weight: bold;
+        transition: background 0.3s ease;
+    }
+    .sort-btn:hover {
+        background: #0056b3;
     }
 </style>
