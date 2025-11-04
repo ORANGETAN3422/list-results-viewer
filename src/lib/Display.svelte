@@ -103,38 +103,35 @@
                           allStats[0],
                       ).name,
                   },
-                  highestMode: {
-                      value: allStats.reduce(
+                  highestMode: (() => {
+                      const best = allStats.reduce(
                           (prev, curr) =>
                               curr.stats.modeCount > prev.stats.modeCount
                                   ? curr
                                   : prev,
                           allStats[0],
-                      ).stats.modeCount,
-                      recordHolder: allStats.reduce(
-                          (prev, curr) =>
-                              curr.stats.modeCount > prev.stats.modeCount
-                                  ? curr
-                                  : prev,
-                          allStats[0],
-                      ).name,
-                  },
-                  lowestMode: {
-                      value: allStats.reduce(
-                          (prev, curr) =>
-                              curr.stats.modeCount < prev.stats.modeCount
-                                  ? curr
-                                  : prev,
-                          allStats[0],
-                      ).stats.modeCount,
-                      recordHolder: allStats.reduce(
+                      );
+                      return {
+                          value: best.stats.mode,
+                          modeCount: best.stats.modeCount,
+                          recordHolder: best.name,
+                      };
+                  })(),
+
+                  lowestMode: (() => {
+                      const worst = allStats.reduce(
                           (prev, curr) =>
                               curr.stats.modeCount < prev.stats.modeCount
                                   ? curr
                                   : prev,
                           allStats[0],
-                      ).name,
-                  },
+                      );
+                      return {
+                          value: worst.stats.mode,
+                          modeCount: worst.stats.modeCount,
+                          recordHolder: worst.name,
+                      };
+                  })(),
                   highestStd: {
                       value: allStats.reduce(
                           (prev, curr) =>

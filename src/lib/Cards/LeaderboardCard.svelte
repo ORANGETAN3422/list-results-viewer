@@ -1,6 +1,7 @@
 <script>
     export let leaderboard = {};
     export let currentlyViewing = "";
+    console.log(leaderboard);
 
     function capitalise(val) {
         return String(val).charAt(0).toUpperCase() + String(val).slice(1);
@@ -9,41 +10,31 @@
     const metrics = [
         { key: "mean", label: "Mean" },
         { key: "median", label: "Median" },
-        { key: "mode", label: "Mode", extraStats: ["modeCount"] },
+        { key: "mode", label: "Mode" },
         { key: "std", label: "Std Dev" },
     ];
 
     const stats =
         leaderboard && Object.keys(leaderboard).length > 0
             ? metrics.flatMap((metric) => {
-                  const high =
-                      leaderboard[
-                          `highest${metric.key.charAt(0).toUpperCase() + metric.key.slice(1)}`
-                      ];
-                  const low =
-                      leaderboard[
-                          `lowest${metric.key.charAt(0).toUpperCase() + metric.key.slice(1)}`
-                      ];
+                  const highKey = `highest${metric.key.charAt(0).toUpperCase() + metric.key.slice(1)}`;
+                  const lowKey = `lowest${metric.key.charAt(0).toUpperCase() + metric.key.slice(1)}`;
 
-                  const buildEntry = (label, record, isHigh) => {
-                      const statObj = { [metric.key]: record?.value ?? 0 };
-                      if (metric.extraStats) {
-                          metric.extraStats.forEach((extra) => {
-                              statObj[extra] = record?.[extra] ?? 0;
-                          });
-                      }
+                  const high = leaderboard[highKey];
+                  const low = leaderboard[lowKey];
 
+                  const buildEntry = (label, keyName, isHigh) => {
                       return [
-                          label + (isHigh ? " 🢃" : " 🢁"),
-                          { user: record?.recordHolder ?? "-", stats: statObj },
+                          label + (isHigh ? " 🢁" : " 🢃"),
+                          keyName,
                           metric.key,
                           isHigh,
                       ];
                   };
 
                   return [
-                      buildEntry(`Highest ${metric.label}`, high, true),
-                      buildEntry(`Lowest ${metric.label}`, low, false),
+                      buildEntry(`Highest ${metric.label}`, highKey, true),
+                      buildEntry(`Lowest ${metric.label}`, lowKey, false),
                   ];
               })
             : [];
@@ -52,15 +43,15 @@
 <div class="card">
     <h3>{capitalise(currentlyViewing)} Leaderboard</h3>
 
-    {#each stats as [label, entry, key, positive]}
+    {#each stats as [label, boardKey, key, positive]}
         <div class="rating-row">
             <span class="level-name">{label}</span>
             <span class={positive ? "level-value-green" : "level-value-red"}>
-                {entry.user} -
-                {#if key === "mode"}
-                    {entry.stats[key]} x{entry.stats.modeCount}
+                {leaderboard[boardKey]?.recordHolder ?? "-"} - {#if key === "mode"}
+                    {leaderboard[boardKey]?.value} x{leaderboard[boardKey]
+                        ?.modeCount}
                 {:else}
-                    {entry.stats[key]}
+                    {leaderboard[boardKey]?.value}
                 {/if}
             </span>
         </div>
