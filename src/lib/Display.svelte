@@ -2,8 +2,9 @@
     import { formatKey, calculateStats } from "../helpers/dataAnalyse";
 
     import LeaderboardCard from "./Cards/LeaderboardCard.svelte";
-    import ListCard from "./Cards/ResultsCard.svelte";
-    import StatsCard from "./Cards/IndividualStatsCard.svelte";
+    import ResultsCard from "./Cards/ResultsCard.svelte";
+    import IndividualStatsCard from "./Cards/IndividualStatsCard.svelte";
+    import SortingCard from "./Cards/SortingCard.svelte";
 
     export let data;
     export let currentlyViewing;
@@ -165,7 +166,7 @@
 </script>
 
 <section class="user-section">
-    <ListCard
+    <ResultsCard
         {selectedItem}
         {allStats}
         bind:selectedIndex
@@ -173,11 +174,13 @@
         onSortToggle={toggleSortOrder}
     />
 
-    <StatsCard
+    <IndividualStatsCard
         title={"Individual Stats - " + formatKey(selectedItem.name)}
         stats={selectedItem.stats}
         {selectedItem}
     />
 
     <LeaderboardCard {leaderboard} {currentlyViewing} />
+
+    <SortingCard {allStats} />
 </section>

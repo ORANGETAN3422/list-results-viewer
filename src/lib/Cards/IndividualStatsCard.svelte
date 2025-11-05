@@ -42,7 +42,7 @@
 
     {#if modes.length > 0}
         <div class="mode-summary">
-            <h4>Mode Summary</h4>
+            <h4>Rating Summary</h4>
             {#each modes as { value, count }}
                 <div class="mode-row">
                     <span class="mode-value" style="color: {getColor(value)}">
