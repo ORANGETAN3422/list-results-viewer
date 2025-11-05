@@ -1,7 +1,8 @@
 <script>
+    import { formatKey } from "../../helpers/dataAnalyse";
+
     export let leaderboard = {};
     export let currentlyViewing = "";
-    console.log(leaderboard);
 
     function capitalise(val) {
         return String(val).charAt(0).toUpperCase() + String(val).slice(1);
@@ -19,9 +20,6 @@
             ? metrics.flatMap((metric) => {
                   const highKey = `highest${metric.key.charAt(0).toUpperCase() + metric.key.slice(1)}`;
                   const lowKey = `lowest${metric.key.charAt(0).toUpperCase() + metric.key.slice(1)}`;
-
-                  const high = leaderboard[highKey];
-                  const low = leaderboard[lowKey];
 
                   const buildEntry = (label, keyName, isHigh) => {
                       return [
@@ -47,7 +45,7 @@
         <div class="rating-row">
             <span class="level-name">{label}</span>
             <span class={positive ? "level-value-green" : "level-value-red"}>
-                {leaderboard[boardKey]?.recordHolder ?? "-"} - {#if key === "mode"}
+                {formatKey(leaderboard[boardKey]?.recordHolder) ?? "-"} - {#if key === "mode"}
                     {leaderboard[boardKey]?.value} x{leaderboard[boardKey]
                         ?.modeCount}
                 {:else}

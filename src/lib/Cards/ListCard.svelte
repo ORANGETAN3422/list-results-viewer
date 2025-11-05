@@ -20,7 +20,7 @@
 <div class="card">
     <select bind:value={selectedIndex} on:change={onSelectChange}>
         {#each allStats as { name }, index}
-            <option value={index}>{name}</option>
+            <option value={index}>{formatKey(name)}</option>
         {/each}
     </select>
 

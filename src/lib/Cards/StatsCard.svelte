@@ -1,4 +1,6 @@
 <script>
+    import { formatKey, getColor } from "../../helpers/dataAnalyse";
+
     export let title;
     export let stats;
 </script>
@@ -8,7 +10,7 @@
     {#each Object.entries(stats) as [statName, value]}
         <div class="rating-row">
             <span class="level-name">{statName}</span>
-            <span class="level-value-green">
+            <span class="level-value-green" style={"color: " + getColor(value)}>
                 {statName === "mode" ? `${value} (x${stats.modeCount})` : value}
             </span>
         </div>

@@ -1,9 +1,5 @@
 <script>
-    import {
-        getColor,
-        formatKey,
-        calculateStats,
-    } from "../helpers/dataAnalyse";
+    import { formatKey, calculateStats } from "../helpers/dataAnalyse";
 
     import LeaderboardCard from "./Cards/LeaderboardCard.svelte";
     import ListCard from "./Cards/ListCard.svelte";

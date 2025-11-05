@@ -15,13 +15,30 @@ export function sortIntoLevels(results) {
 
 export function sortIntoPeople(results) {
     const obj = {};
+
     results.forEach(result => {
-        const personObj = {};
-        obj[result.who] = personObj;
+        const user = result.who;
+        if (!obj[user]) {
+            obj[user] = {};
+        }
+
         for (const key in result) {
             if (key === "who") continue;
-            personObj[key] = result[key];
+
+            const newValue = result[key];
+            const existingValue = obj[user][key];
+
+            if (
+                newValue !== null &&
+                newValue !== "" &&
+                newValue !== undefined
+            ) {
+                obj[user][key] = newValue;
+            } else if (existingValue === undefined) {
+                obj[user][key] = newValue;
+            }
         }
     });
+
     return obj;
 }
