@@ -176,6 +176,7 @@
     <StatsCard
         title={"Individual Stats - " + formatKey(selectedItem.name)}
         stats={selectedItem.stats}
+        {selectedItem}
     />
 
     <LeaderboardCard {leaderboard} {currentlyViewing} />
