@@ -1,5 +1,7 @@
 <script>
     import { getColor, formatKey } from "../../helpers/dataAnalyse";
+    import SearchBar from "../SearchBar.svelte";
+
     export let selectedItem = { name: "", ratings: {}, stats: {} };
     export let selectedIndex = 0;
     export let allStats = [];
@@ -18,11 +20,11 @@
 </script>
 
 <div class="card">
-    <select bind:value={selectedIndex} on:change={onSelectChange}>
-        {#each allStats as { name }, index}
-            <option value={index}>{formatKey(name)}</option>
-        {/each}
-    </select>
+    <SearchBar
+        items={allStats}
+        bind:selectedIndex
+        on:change={() => onSelectChange()}
+    />
 
     <h3>{formatKey(selectedItem.name)}</h3>
 

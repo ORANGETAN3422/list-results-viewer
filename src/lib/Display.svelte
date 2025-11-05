@@ -2,8 +2,8 @@
     import { formatKey, calculateStats } from "../helpers/dataAnalyse";
 
     import LeaderboardCard from "./Cards/LeaderboardCard.svelte";
-    import ListCard from "./Cards/ListCard.svelte";
-    import StatsCard from "./Cards/StatsCard.svelte";
+    import ListCard from "./Cards/ResultsCard.svelte";
+    import StatsCard from "./Cards/IndividualStatsCard.svelte";
 
     export let data;
     export let currentlyViewing;
