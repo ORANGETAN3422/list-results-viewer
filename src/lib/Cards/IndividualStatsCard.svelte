@@ -58,13 +58,6 @@
 </div>
 
 <style>
-    .card {
-        padding: 1rem;
-        border-radius: 8px;
-        background: #1e1e1e;
-        color: #fff;
-        width: 300px;
-    }
     .rating-row,
     .mode-row {
         display: flex;

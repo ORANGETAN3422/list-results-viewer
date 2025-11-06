@@ -1,6 +1,7 @@
 <script>
   import { filterCsv, csvToJson } from "./helpers/csvParse";
   import { sortIntoLevels, sortIntoPeople } from "./helpers/sortResults";
+  import { exportResults } from "./helpers/exportResults";
   import Display from "./lib/Display.svelte";
 
   let file;
@@ -61,6 +62,10 @@
   function toggleView() {
     currentlyViewing = currentlyViewing === "people" ? "levels" : "people";
   }
+
+  function exportToClipboard() {
+    exportResults(sortedByPeople, sortedByLevels);
+  }
 </script>
 
 <div class="p-6 space-y-4 text-center">
@@ -94,6 +99,9 @@
   {#if filtered === "combined"}
     <button on:click={toggleView} class="btn">
       View {currentlyViewing === "people" ? "Levels" : "People"}
+    </button>
+    <button on:click={exportToClipboard} class="btn">
+      Export Results to Clipboard
     </button>
 
     {#if currentlyViewing === "levels"}
