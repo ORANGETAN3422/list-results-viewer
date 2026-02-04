@@ -1,5 +1,5 @@
 <script>
-  import { filterCsv, csvToJson } from "./helpers/csvParse";
+  import { csvToJson } from "./helpers/csvParse";
   import { sortIntoLevels, sortIntoPeople } from "./helpers/sortResults";
   import { exportResults } from "./helpers/exportResults";
   import Display from "./lib/Display.svelte";
@@ -20,8 +20,7 @@
     if (!file) return;
 
     const text = await file.text();
-    const filteredCsv = filterCsv(text);
-    const parsedJson = csvToJson(filteredCsv);
+    const parsedJson = csvToJson(text);
 
     if (type === "main") {
       mainJson = [...parsedJson];
